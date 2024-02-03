@@ -1,0 +1,40 @@
+package root:component;
+
+interface types {
+  record text-splitter-config {
+    max-length: s32,
+    min-length: s32,
+  }
+  
+  record transform-html-config {
+    placeholder-class: string,
+    base-path-for-relative-images: string,
+    post-id: string,
+    text-splitter-config: option<text-splitter-config>
+  }
+  
+  record image-data {
+    src: string,
+    width: option<s32>,
+    height: option<s32>
+  }
+  
+  record html-data {
+    html: string,
+    section: s32
+  }
+  
+  variant content-block {
+    intro(html-data),
+    h2(html-data),
+  }
+  
+  record blocks-and-images {
+    blocks: list<content-block>,
+    images: list<image-data>
+  }
+}
+world root {
+  use types.{transform-html-config, blocks-and-images};
+  export transform-html: func(input: string, config: transform-html-config) -> blocks-and-images;
+}
